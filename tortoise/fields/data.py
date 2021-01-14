@@ -307,10 +307,12 @@ class DatetimeField(Field, datetime.datetime):
             datetime_value = datetime.datetime.fromtimestamp(value)
         else:
             datetime_value = parse_datetime(value)
-        if timezone.is_naive(datetime_value):
-            datetime_value = timezone.make_aware(datetime_value, get_timezone())
-        else:
-            datetime_value = localtime(datetime_value)
+        if get_use_tz():
+
+            if timezone.is_naive(datetime_value):
+                datetime_value = timezone.make_aware(datetime_value, get_timezone())
+            else:
+                datetime_value = localtime(datetime_value)
         return datetime_value
 
     def to_db_value(
